@@ -1,0 +1,48 @@
+﻿@model OpenWeatherMap
+
+<h1>Implement OpenWeatherMap API in ASP.NET Core MVC</h1>
+
+@using (Html.BeginForm())
+{
+    <div id="apiDiv">
+        <h4>Select the City for Weather Report</h4>
+
+        @foreach (var city in Model.Cities)
+        {
+            <label for="@city.Value">
+                <input type="radio" name="SelectedCity" value="@city.Value" id="@city.Value" />
+                @city.Key
+            </label>
+        }
+
+        <hr>
+        <h4>Or Search for a City</h4>
+        <input type="text" name="SearchCity" placeholder="Enter a city name" value="@Model.SearchCity" />
+        <button name="submit">Submit</button>
+        <button id="reset" name="reset">Reset »</button>
+    </div>
+
+    <div id="weather-info">
+        <div id="message">@Html.Raw(Model.ApiResponse)</div>
+
+        <div id="weather-icon">
+            @if (!string.IsNullOrEmpty(Model.WeatherIconCode))
+            {
+                var iconCode = Model.WeatherIconCode;
+                var iconUrl = $"https://openweathermap.org/img/wn/{iconCode}@2x.png";
+                <img src="@iconUrl" alt="Weather Icon" />
+            }
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("input[name='SelectedCity']").change(function () {
+                $(this).parents("#apiDiv").find("span").css("background", "none");
+            });
+        });
+    </script>
+}
